@@ -2149,7 +2149,7 @@ MonoBehaviour:
   rotationSpeed: 0.2
   scaleSpeedPC: 0.01
   panSpeedPC: 0.001
-  scaleSpeedMobile: 0.01
+  scaleSpeedMobile: 0.001
   panSpeedMobile: 0.0001
   minScale: 0.5
   maxScale: 2

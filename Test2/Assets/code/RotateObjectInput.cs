@@ -1,4 +1,5 @@
-using UnityEngine;
+
+
 
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ public class RotateObjectInput : MonoBehaviour
     private float initialTouchDistance;     // 初始双指距离
     private Vector3 initialObjectScale;     // 记录初始缩放
     private Vector2 initialTouchCenter;     // 记录双指初始的中心位置
+    private float initialAngle;             // 记录双指初始角度
 
     // 限制缩放范围
     public float minScale = 0.5f;      // 最小缩放比例
@@ -52,7 +54,7 @@ public class RotateObjectInput : MonoBehaviour
                     // 在移动端反转上下旋转
                     if (Application.isMobilePlatform)
                     {
-                        rotationY = -rotationY; // 反转上下旋转
+                        rotationX = -rotationX; // 反转上下旋转
                     }
 
                     // 应用旋转（世界坐标系）
@@ -60,18 +62,19 @@ public class RotateObjectInput : MonoBehaviour
                     transform.Rotate(Vector3.right, rotationY, Space.World);
                 }
             }
-            // 双指触摸用于缩放和平移
+            // 双指触摸用于缩放、平移和旋转
             else if (Input.touchCount == 2)
             {
                 Touch touch0 = Input.GetTouch(0);
                 Touch touch1 = Input.GetTouch(1);
 
-                // 记录双指触摸的初始距离、初始缩放、和初始中心位置
+                // 记录双指触摸的初始距离、初始缩放、初始中心位置和初始角度
                 if (touch0.phase == TouchPhase.Began || touch1.phase == TouchPhase.Began)
                 {
                     initialTouchDistance = Vector2.Distance(touch0.position, touch1.position);
                     initialObjectScale = transform.localScale;
                     initialTouchCenter = (touch0.position + touch1.position) / 2;
+                    initialAngle = Mathf.Atan2(touch1.position.y - touch0.position.y, touch1.position.x - touch0.position.x) * Mathf.Rad2Deg;
                 }
 
                 // 当前双指距离
@@ -107,6 +110,16 @@ public class RotateObjectInput : MonoBehaviour
                     transform.Translate(panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 更新中心位置
                 }
+
+                // 计算当前的角度
+                float currentAngle = Mathf.Atan2(touch1.position.y - touch0.position.y, touch1.position.x - touch0.position.x) * Mathf.Rad2Deg;
+                float angleDelta = currentAngle - initialAngle;
+
+                // 应用旋转
+                transform.Rotate(Vector3.forward, angleDelta, Space.World);
+
+                // 更新初始角度
+                initialAngle = currentAngle;
             }
         }
         else
