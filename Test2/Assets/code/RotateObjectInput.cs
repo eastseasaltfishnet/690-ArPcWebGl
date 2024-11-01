@@ -12,11 +12,12 @@ public class RotateObjectInput : MonoBehaviour
 
     // 移动端的缩放和平移速度
     public float scaleSpeedMobile = 0.003f;  // 较低的缩放速度
-    public float panSpeedMobile = 0.005f;    // 较低的平移速度
+    public float panSpeedMobile = 0.002f;    // 更低的平移速度
 
-    private Vector3 lastMousePosition; // 记录上一次鼠标位置
-    private float initialTouchDistance; // 初始双指距离
-    private Vector3 initialObjectScale; // 记录初始缩放
+    private Vector3 lastMousePosition;      // 记录上一次鼠标位置
+    private float initialTouchDistance;     // 初始双指距离
+    private Vector3 initialObjectScale;     // 记录初始缩放
+    private Vector2 initialTouchCenter;     // 记录双指初始的中心位置
 
     // 限制缩放范围
     public float minScale = 0.5f;      // 最小缩放比例
@@ -57,11 +58,24 @@ public class RotateObjectInput : MonoBehaviour
                 Touch touch0 = Input.GetTouch(0);
                 Touch touch1 = Input.GetTouch(1);
 
-                // 在双指触摸开始时，记录初始双指距离和物体的初始缩放
+                // 记录双指触摸的初始距离、初始缩放、和初始中心位置
                 if (touch0.phase == TouchPhase.Began || touch1.phase == TouchPhase.Began)
                 {
                     initialTouchDistance = Vector2.Distance(touch0.position, touch1.position);
                     initialObjectScale = transform.localScale;
+                    initialTouchCenter = (touch0.position + touch1.position) / 2;
+                }
+
+                // 计算当前双指的中心位置和相对的平移距离
+                Vector2 currentTouchCenter = (touch0.position + touch1.position) / 2;
+                Vector2 panDelta = currentTouchCenter - initialTouchCenter;
+
+                // 只有当两个手指都在移动时才进行平移
+                if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
+                {
+                    Vector3 panMovement = new Vector3(-panDelta.x * currentPanSpeed, -panDelta.y * currentPanSpeed, 0);
+                    transform.Translate(panMovement, Space.World);
+                    initialTouchCenter = currentTouchCenter; // 更新中心位置
                 }
 
                 // 当前双指距离
@@ -69,17 +83,10 @@ public class RotateObjectInput : MonoBehaviour
                 float scaleMultiplier = (currentTouchDistance / initialTouchDistance);
 
                 // 应用缩放并限制缩放范围
-                Vector3 newScale = initialObjectScale * scaleMultiplier;
+                Vector3 newScale = initialObjectScale * scaleMultiplier * currentScaleSpeed;
                 newScale = Vector3.Max(newScale, Vector3.one * minScale); // 限制最小缩放
                 newScale = Vector3.Min(newScale, Vector3.one * maxScale); // 限制最大缩放
                 transform.localScale = newScale;
-
-                // 平移操作：计算两只手指平均移动的距离
-                Vector2 touchDeltaPosition = (touch0.deltaPosition + touch1.deltaPosition) / 2;
-                Vector3 panMovement = new Vector3(-touchDeltaPosition.x * currentPanSpeed, -touchDeltaPosition.y * currentPanSpeed, 0);
-
-                // 应用平移
-                transform.Translate(panMovement, Space.World);
             }
         }
         else
