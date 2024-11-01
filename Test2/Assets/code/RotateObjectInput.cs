@@ -1,3 +1,5 @@
+using UnityEngine;
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -47,6 +49,12 @@ public class RotateObjectInput : MonoBehaviour
                     float rotationX = touch.deltaPosition.x * rotationSpeed;
                     float rotationY = touch.deltaPosition.y * rotationSpeed;
 
+                    // 在移动端反转上下旋转
+                    if (Application.isMobilePlatform)
+                    {
+                        rotationY = -rotationY; // 反转上下旋转
+                    }
+
                     // 应用旋转（世界坐标系）
                     transform.Rotate(Vector3.up, rotationX, Space.World);
                     transform.Rotate(Vector3.right, rotationY, Space.World);
@@ -66,27 +74,39 @@ public class RotateObjectInput : MonoBehaviour
                     initialTouchCenter = (touch0.position + touch1.position) / 2;
                 }
 
+                // 当前双指距离
+                float currentTouchDistance = Vector2.Distance(touch0.position, touch1.position);
+
+                // 只有当双指距离发生变化时才执行缩放
+                if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
+                {
+                    // 计算距离的变化比例，放大或缩小
+                    float scaleMultiplier = currentTouchDistance / initialTouchDistance;
+
+                    // 计算新的缩放比例，基于初始比例
+                    Vector3 newScale = initialObjectScale * scaleMultiplier;
+                    newScale = Vector3.Max(newScale, Vector3.one * minScale); // 限制最小缩放
+                    newScale = Vector3.Min(newScale, Vector3.one * maxScale); // 限制最大缩放
+                    transform.localScale = newScale;
+                }
+
                 // 计算当前双指的中心位置和相对的平移距离
                 Vector2 currentTouchCenter = (touch0.position + touch1.position) / 2;
                 Vector2 panDelta = currentTouchCenter - initialTouchCenter;
 
+                // 在移动端反转平移的上下左右方向
+                if (Application.isMobilePlatform)
+                {
+                    panDelta = -panDelta; // 反转平移的方向
+                }
+
                 // 只有当两个手指都在移动时才进行平移
                 if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
                 {
-                    Vector3 panMovement = new Vector3(-panDelta.x * currentPanSpeed, -panDelta.y * currentPanSpeed, 0);
+                    Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed, panDelta.y * currentPanSpeed, 0);
                     transform.Translate(panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 更新中心位置
                 }
-
-                // 当前双指距离
-                float currentTouchDistance = Vector2.Distance(touch0.position, touch1.position);
-                float scaleMultiplier = (currentTouchDistance / initialTouchDistance);
-
-                // 应用缩放并限制缩放范围
-                Vector3 newScale = initialObjectScale * scaleMultiplier * currentScaleSpeed;
-                newScale = Vector3.Max(newScale, Vector3.one * minScale); // 限制最小缩放
-                newScale = Vector3.Min(newScale, Vector3.one * maxScale); // 限制最大缩放
-                transform.localScale = newScale;
             }
         }
         else
