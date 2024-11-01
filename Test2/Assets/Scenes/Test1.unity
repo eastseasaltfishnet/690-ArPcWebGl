@@ -2147,8 +2147,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0.2
-  scaleSpeed: 0.01
-  panSpeed: 0.001
+  scaleSpeedPC: 0.01
+  panSpeedPC: 0.001
+  scaleSpeedMobile: 0.003
+  panSpeedMobile: 0.0001
+  minScale: 0.5
+  maxScale: 2
 --- !u!114 &2139048455
 MonoBehaviour:
   m_ObjectHideFlags: 0
