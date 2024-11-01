@@ -15,6 +15,8 @@ public class RotateObjectInput : MonoBehaviour
     public float panSpeedMobile = 0.005f;    // 较低的平移速度
 
     private Vector3 lastMousePosition; // 记录上一次鼠标位置
+    private float initialTouchDistance; // 初始双指距离
+    private Vector3 initialObjectScale; // 记录初始缩放
 
     // 限制缩放范围
     public float minScale = 0.5f;      // 最小缩放比例
@@ -41,7 +43,6 @@ public class RotateObjectInput : MonoBehaviour
                 Touch touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Moved)
                 {
-                    // 根据触摸移动的距离计算旋转量
                     float rotationX = touch.deltaPosition.x * rotationSpeed;
                     float rotationY = touch.deltaPosition.y * rotationSpeed;
 
@@ -56,13 +57,19 @@ public class RotateObjectInput : MonoBehaviour
                 Touch touch0 = Input.GetTouch(0);
                 Touch touch1 = Input.GetTouch(1);
 
-                // 计算两次触摸之间的距离变化用于缩放
-                float prevTouchDeltaMag = (touch0.position - touch1.position).magnitude;
-                float touchDeltaMag = (touch0.position - touch1.position).magnitude;
-                float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+                // 在双指触摸开始时，记录初始双指距离和物体的初始缩放
+                if (touch0.phase == TouchPhase.Began || touch1.phase == TouchPhase.Began)
+                {
+                    initialTouchDistance = Vector2.Distance(touch0.position, touch1.position);
+                    initialObjectScale = transform.localScale;
+                }
 
-                // 应用缩放，并限制缩放范围
-                Vector3 newScale = transform.localScale + Vector3.one * deltaMagnitudeDiff * currentScaleSpeed;
+                // 当前双指距离
+                float currentTouchDistance = Vector2.Distance(touch0.position, touch1.position);
+                float scaleMultiplier = (currentTouchDistance / initialTouchDistance);
+
+                // 应用缩放并限制缩放范围
+                Vector3 newScale = initialObjectScale * scaleMultiplier;
                 newScale = Vector3.Max(newScale, Vector3.one * minScale); // 限制最小缩放
                 newScale = Vector3.Min(newScale, Vector3.one * maxScale); // 限制最大缩放
                 transform.localScale = newScale;
