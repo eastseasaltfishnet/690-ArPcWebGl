@@ -54,7 +54,8 @@ public class RotateObjectInput : MonoBehaviour
                     // 在移动端反转上下旋转
                     if (Application.isMobilePlatform)
                     {
-                        rotationX = -rotationX; // 反转上下旋转
+                        rotationX = -rotationX;
+                        rotationY = -rotationY;
                     }
 
                     // 应用旋转（世界坐标系）
@@ -124,7 +125,7 @@ public class RotateObjectInput : MonoBehaviour
         }
         else
         {
-            // 这里是PC端的鼠标操作，不需要更改
+            // 这里是PC端的鼠标操作
             if (Input.GetMouseButton(0))
             {
                 Vector3 delta = Input.mousePosition - lastMousePosition;
@@ -146,7 +147,15 @@ public class RotateObjectInput : MonoBehaviour
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             if (Mathf.Abs(scroll) > 0.01f)
             {
-                transform.localScale += Vector3.one * scroll * scaleSpeedPC * 50;
+                // 计算新的缩放比例
+                Vector3 newScale = transform.localScale + Vector3.one * scroll * scaleSpeedPC * 50;
+
+                // 应用缩放限制
+                newScale = Vector3.Max(newScale, Vector3.one * minScale);
+                newScale = Vector3.Min(newScale, Vector3.one * maxScale);
+
+                // 应用新的缩放
+                transform.localScale = newScale;
             }
         }
 

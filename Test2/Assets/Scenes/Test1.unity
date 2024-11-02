@@ -230,7 +230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7c067e774884e3fb23c00a74bd6040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_anchorOffsetFromCamera: {x: 0, y: 0, z: -3}
+  m_anchorOffsetFromCamera: {x: 0, y: 0, z: -11}
   m_placeOnTouch: 0
   MoveAnchorOnZ: 0
   m_zCamera: {fileID: 0}
@@ -2254,6 +2254,14 @@ PrefabInstance:
     - target: {fileID: 5564751459522751516, guid: 6456ba54ea965614ba19335aad030314, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564751459522751517, guid: 6456ba54ea965614ba19335aad030314, type: 3}
+      propertyPath: maxScale
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564751459522751517, guid: 6456ba54ea965614ba19335aad030314, type: 3}
+      propertyPath: minScale
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5564751459522751517, guid: 6456ba54ea965614ba19335aad030314, type: 3}
       propertyPath: m_Enabled

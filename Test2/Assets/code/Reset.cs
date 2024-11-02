@@ -19,7 +19,7 @@ public class Reset : MonoBehaviour
     // 调用此方法重置物体
     public void ResetTransform()
     {
-        transform.position = new Vector3(initialRotation.x, initialRotation.y, 3f);
+        transform.position = new Vector3(initialRotation.x, initialRotation.y, 11f);
         transform.rotation = initialRotation;
         transform.localScale = initialScale;
     }
