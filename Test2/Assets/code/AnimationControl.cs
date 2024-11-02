@@ -14,8 +14,18 @@ public class AnimationControl : MonoBehaviour
     // 播放动画
     public void PlayAnimation()
     {
-        animator.speed = 1f; // 设置播放速度为正常速度
-        isPaused = false;
+        if (animator != null)
+        {
+            Debug.Log("Playing Animation");
+            animator.speed = 1f;
+            isPaused = false;
+        }
+        else
+        {
+            Debug.LogError("Animator is not assigned in PlayAnimation.");
+        }
+
+
     }
 
     // 暂停动画
