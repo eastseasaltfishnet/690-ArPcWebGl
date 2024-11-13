@@ -15,7 +15,7 @@ public class RotateObjectInput : MonoBehaviour
 
     // 移动端的缩放和平移速度
     public float scaleSpeedMobile = 0.003f;  // 较低的缩放速度
-    public float panSpeedMobile = 0.002f;    // 更低的平移速度
+    public float panSpeedMobile = 0.01f;    // 更低的平移速度
 
     private Vector3 lastMousePosition;      // 记录上一次鼠标位置
     private float initialTouchDistance;     // 初始双指距离
