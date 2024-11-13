@@ -92,23 +92,15 @@ public class RotateObjectInput : MonoBehaviour
                 Vector2 currentTouchCenter = (touch0.position + touch1.position) / 2;
                 Vector2 panDelta = currentTouchCenter - initialTouchCenter;
 
-                // 在移动端反转平移的上下左右方向
-                if (Application.isMobilePlatform)
-                {
-                    panDelta = -panDelta; // 反转平移的方向
-                    panDelta = panDelta * 2.0f;
-                }
-                 Console.WriteLine(Application.isMobilePlatform);
+
+
                 // 只有当两个手指都在移动时才进行平移
                 if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
                 {
-                    Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed, panDelta.y * currentPanSpeed, 0);
-                    transform.Translate(panMovement, Space.World);
+                    Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed*1.3f, panDelta.y * currentPanSpeed * 1.3f, 0);
+                    transform.Translate(-panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 更新中心位置
 
-   
-                    Console.WriteLine(currentPanSpeed);
-                    Console.WriteLine(panDelta);
                 }
 
                 // 计算当前的角度
