@@ -98,7 +98,7 @@ public class RotateObjectInput : MonoBehaviour
                 if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
                 {
                     Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed*1.3f, panDelta.y * currentPanSpeed * 1.3f, 0);
-                    transform.Translate(-panMovement, Space.World);
+                    transform.Translate(panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 更新中心位置
 
                 }
