@@ -1,6 +1,7 @@
 
 
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -95,14 +96,19 @@ public class RotateObjectInput : MonoBehaviour
                 if (Application.isMobilePlatform)
                 {
                     panDelta = -panDelta; // 反转平移的方向
+                    panDelta = panDelta * 2.0f;
                 }
-
+                 Console.WriteLine(Application.isMobilePlatform);
                 // 只有当两个手指都在移动时才进行平移
                 if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
                 {
                     Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed, panDelta.y * currentPanSpeed, 0);
                     transform.Translate(panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 更新中心位置
+
+   
+                    Console.WriteLine(currentPanSpeed);
+                    Console.WriteLine(panDelta);
                 }
 
                 // 计算当前的角度
