@@ -51,16 +51,9 @@ public class RotateObjectInput : MonoBehaviour
                     float rotationX = touch.deltaPosition.x * rotationSpeed;
                     float rotationY = touch.deltaPosition.y * rotationSpeed;
 
-                    // 在移动端反转上下旋转
-                    if (Application.isMobilePlatform)
-                    {
-                        rotationX = -rotationX;
-                        rotationY = -rotationY;
-                    }
-
                     // 应用旋转（世界坐标系）
                     transform.Rotate(Vector3.up, rotationX, Space.World);
-                    transform.Rotate(Vector3.right, rotationY, Space.World);
+                    transform.Rotate(Vector3.right, -rotationY, Space.World);
                 }
             }
             // 双指触摸用于缩放、平移和旋转
