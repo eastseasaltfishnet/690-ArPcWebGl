@@ -2236,6 +2236,10 @@ PrefabInstance:
       value: GPUAnimation
       objectReference: {fileID: 0}
     - target: {fileID: 8030717866960811754, guid: 1ac967d811b6fba47ba7b5aebd3015f5, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 7721039194791774270}
+    - target: {fileID: 8030717866960811754, guid: 1ac967d811b6fba47ba7b5aebd3015f5, type: 3}
       propertyPath: animationSlider
       value: 
       objectReference: {fileID: 1443813920}
