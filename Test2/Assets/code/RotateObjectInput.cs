@@ -1,7 +1,3 @@
-
-
-
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,17 +12,17 @@ public class RotateObjectInput : MonoBehaviour
 
     // 移动端的缩放和平移速度
     public float scaleSpeedMobile = 0.003f;  // 较低的缩放速度
-    public float panSpeedMobile = 0.01f;    // 更低的平移速度
+    public float panSpeedMobile = 0.01f;     // 更低的平移速度
 
-    private Vector3 lastMousePosition;      // 记录上一次鼠标位置
-    private float initialTouchDistance;     // 初始双指距离
-    private Vector3 initialObjectScale;     // 记录初始缩放
-    private Vector2 initialTouchCenter;     // 记录双指初始的中心位置
-    private float initialAngle;             // 记录双指初始角度
+    private Vector3 lastMousePosition;       // 记录上一次鼠标位置
+    private float initialTouchDistance;      // 初始双指距离
+    private Vector3 initialObjectScale;      // 记录初始缩放
+    private Vector2 initialTouchCenter;      // 记录双指初始的中心位置
+    private float initialAngle;              // 记录双指初始角度
 
     // 限制缩放范围
-    public float minScale = 0.5f;      // 最小缩放比例
-    public float maxScale = 2.0f;      // 最大缩放比例
+    public float minScale = 0.5f;            // 最小缩放比例
+    public float maxScale = 2.0f;            // 最大缩放比例
 
     void Update()
     {
@@ -92,15 +88,16 @@ public class RotateObjectInput : MonoBehaviour
                 Vector2 currentTouchCenter = (touch0.position + touch1.position) / 2;
                 Vector2 panDelta = currentTouchCenter - initialTouchCenter;
 
-
+                // 动态调整移动端平移速度，适配不同的 DPI
+                float screenScaleFactor = 160f / Screen.dpi; // 基于屏幕 DPI 的比例调整
+                float adjustedPanSpeedMobile = panSpeedMobile * screenScaleFactor;
 
                 // 只有当两个手指都在移动时才进行平移
                 if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
                 {
-                    Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed*1.3f, panDelta.y * currentPanSpeed * 1.3f, 0);
+                    Vector3 panMovement = new Vector3(panDelta.x * adjustedPanSpeedMobile * 1.3f, panDelta.y * adjustedPanSpeedMobile * 1.3f, 0);
                     transform.Translate(panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 更新中心位置
-
                 }
 
                 // 计算当前的角度
