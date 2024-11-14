@@ -201,6 +201,56 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+--- !u!1 &193463566 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1900667574547655190, guid: 1ac967d811b6fba47ba7b5aebd3015f5, type: 3}
+  m_PrefabInstance: {fileID: 312001149978443472}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &193463570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 193463566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a3f4a9443cac4249904e3dc62c5aa83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 1729787695}
+  mainCamera: {fileID: 756365560}
+--- !u!114 &193463571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 193463566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 4.94
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!65 &193463572
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 193463566}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.897282, y: 0.9632578, z: 2.0751276}
+  m_Center: {x: 0.6612527, y: 0.10129303, z: -4.370992}
 --- !u!1 &270947487
 GameObject:
   m_ObjectHideFlags: 0
@@ -2325,6 +2375,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 270947489}
     m_Modifications:
+    - target: {fileID: 652619841208666135, guid: 1ac967d811b6fba47ba7b5aebd3015f5, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1900667574547655190, guid: 1ac967d811b6fba47ba7b5aebd3015f5, type: 3}
+      propertyPath: m_Name
+      value: GPU
+      objectReference: {fileID: 0}
+    - target: {fileID: 1975739530753309315, guid: 1ac967d811b6fba47ba7b5aebd3015f5, type: 3}
+      propertyPath: m_Name
+      value: MotherBoard
+      objectReference: {fileID: 0}
     - target: {fileID: 7221812228144802898, guid: 1ac967d811b6fba47ba7b5aebd3015f5, type: 3}
       propertyPath: m_RootOrder
       value: 0
