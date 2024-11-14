@@ -1,7 +1,4 @@
 
-
-
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,24 +12,26 @@ public class RotateObjectInput : MonoBehaviour
     public float panSpeedPC = 0.1f;
 
     // 移动端的缩放和平移速度
-    public float scaleSpeedMobile = 0.003f;  // 较低的缩放速度
-    public float panSpeedMobile = 0.01f;    // 更低的平移速度
+    public float scaleSpeedMobile = 0.003f; // 较低的缩放速度
+    public float panSpeedMobile = 0.00005f; // 极低的初始平移速度，调整后更慢
 
-    private Vector3 lastMousePosition;      // 记录上一次鼠标位置
-    private float initialTouchDistance;     // 初始双指距离
-    private Vector3 initialObjectScale;     // 记录初始缩放
-    private Vector2 initialTouchCenter;     // 记录双指初始的中心位置
-    private float initialAngle;             // 记录双指初始角度
+    private Vector3 lastMousePosition; // 记录上一次鼠标位置
+    private float initialTouchDistance; // 初始双指距离
+    private Vector3 initialObjectScale; // 记录初始缩放
+    private Vector2 initialTouchCenter; // 记录双指初始的中心位置
+    private float initialAngle; // 记录双指初始角度
 
     // 限制缩放范围
-    public float minScale = 0.5f;      // 最小缩放比例
-    public float maxScale = 2.0f;      // 最大缩放比例
+    public float minScale = 0.5f; // 最小缩放比例
+    public float maxScale = 2.0f; // 最大缩放比例
 
     void Update()
     {
         // 检查当前设备平台，并使用对应的速度
         float currentScaleSpeed = Application.isMobilePlatform ? scaleSpeedMobile : scaleSpeedPC;
-        float currentPanSpeed = Application.isMobilePlatform ? panSpeedMobile : panSpeedPC;
+
+        // 根据分辨率调整移动端的平移速度，使其更慢
+        float currentPanSpeed = Application.isMobilePlatform ? panSpeedMobile * Mathf.Min(Screen.width, Screen.height) : panSpeedPC;
 
         // 如果正在拖动进度条，直接返回，不执行旋转代码
         if (AnimationSliderControl.isDraggingSlider)
@@ -53,8 +52,8 @@ public class RotateObjectInput : MonoBehaviour
                     float rotationY = touch.deltaPosition.y * rotationSpeed;
 
                     // 应用旋转（世界坐标系）
-                    transform.Rotate(Vector3.up, -rotationX, Space.World);
-                    transform.Rotate(Vector3.right, -rotationY, Space.World);
+                    transform.Rotate(Vector3.up, rotationX, Space.World);
+                    transform.Rotate(Vector3.right, rotationY, Space.World);
                 }
             }
             // 双指触摸用于缩放、平移和旋转
@@ -92,10 +91,8 @@ public class RotateObjectInput : MonoBehaviour
                 Vector2 currentTouchCenter = (touch0.position + touch1.position) / 2;
                 Vector2 panDelta = currentTouchCenter - initialTouchCenter;
 
-                if (Application.isMobilePlatform)
-                {
-                    panDelta = -panDelta; // 反转平移的方向
-                }
+                // 标准化平移距离，使平移在所有分辨率上保持一致
+                panDelta /= Screen.dpi;
 
                 // 只有当两个手指都在移动时才进行平移
                 if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
@@ -103,15 +100,6 @@ public class RotateObjectInput : MonoBehaviour
                     Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed, panDelta.y * currentPanSpeed, 0);
                     transform.Translate(panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 更新中心位置
-                }
-
-                // 只有当两个手指都在移动时才进行平移
-                if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
-                {
-                    Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed*1.3f, panDelta.y * currentPanSpeed * 1.3f, 0);
-                    transform.Translate(panMovement, Space.World);
-                    initialTouchCenter = currentTouchCenter; // 更新中心位置
-
                 }
 
                 // 计算当前的角度
@@ -160,7 +148,6 @@ public class RotateObjectInput : MonoBehaviour
                 // 应用新的缩放
                 transform.localScale = newScale;
             }
-
         }
 
         // 更新上一次鼠标位置
