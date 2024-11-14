@@ -84,9 +84,12 @@ public class RotateObjectInput : MonoBehaviour
                 {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     transform.Translate(panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 实时更新中心位置
 =======
+=======
+>>>>>>> parent of d15f726a (contro update)
 =======
 >>>>>>> parent of d15f726a (contro update)
                     Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed*1.3f, panDelta.y * currentPanSpeed * 1.3f, 0);
