@@ -1,3 +1,7 @@
+
+
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,20 +16,17 @@ public class RotateObjectInput : MonoBehaviour
 
     // 移动端的缩放和平移速度
     public float scaleSpeedMobile = 0.003f;  // 较低的缩放速度
-    public float panSpeedMobile = 0.005f;    // 降低的平移速度
+    public float panSpeedMobile = 0.01f;    // 更低的平移速度
 
-    private Vector3 lastMousePosition;       // 记录上一次鼠标位置
-    private float initialTouchDistance;      // 初始双指距离
-    private Vector3 initialObjectScale;      // 记录初始缩放
-    private Vector2 initialTouchCenter;      // 记录双指初始的中心位置
-    private float initialAngle;              // 记录双指初始角度
+    private Vector3 lastMousePosition;      // 记录上一次鼠标位置
+    private float initialTouchDistance;     // 初始双指距离
+    private Vector3 initialObjectScale;     // 记录初始缩放
+    private Vector2 initialTouchCenter;     // 记录双指初始的中心位置
+    private float initialAngle;             // 记录双指初始角度
 
     // 限制缩放范围
-    public float minScale = 0.5f;            // 最小缩放比例
-    public float maxScale = 2.0f;            // 最大缩放比例
-
-    // 平移的最大幅度限制
-    private float maxPanMagnitudeMobile = 50f;  // 限制平移距离，以防移动端偏移过大
+    public float minScale = 0.5f;      // 最小缩放比例
+    public float maxScale = 2.0f;      // 最大缩放比例
 
     void Update()
     {
@@ -40,7 +41,7 @@ public class RotateObjectInput : MonoBehaviour
         }
 
         // 检查触摸输入（适用于移动设备）
-        if (Application.isMobilePlatform && Input.touchCount > 0)
+        if (Input.touchCount > 0)
         {
             // 单指触摸用于旋转
             if (Input.touchCount == 1)
@@ -52,7 +53,7 @@ public class RotateObjectInput : MonoBehaviour
                     float rotationY = touch.deltaPosition.y * rotationSpeed;
 
                     // 应用旋转（世界坐标系）
-                    transform.Rotate(Vector3.up, rotationX, Space.World);
+                    transform.Rotate(Vector3.up, -rotationX, Space.World);
                     transform.Rotate(Vector3.right, -rotationY, Space.World);
                 }
             }
@@ -91,8 +92,10 @@ public class RotateObjectInput : MonoBehaviour
                 Vector2 currentTouchCenter = (touch0.position + touch1.position) / 2;
                 Vector2 panDelta = currentTouchCenter - initialTouchCenter;
 
-                // 限制移动端平移的幅度
-                panDelta = Vector2.ClampMagnitude(panDelta, maxPanMagnitudeMobile);
+                if (Application.isMobilePlatform)
+                {
+                    panDelta = -panDelta; // 反转平移的方向
+                }
 
                 // 只有当两个手指都在移动时才进行平移
                 if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
@@ -100,6 +103,15 @@ public class RotateObjectInput : MonoBehaviour
                     Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed, panDelta.y * currentPanSpeed, 0);
                     transform.Translate(panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 更新中心位置
+                }
+
+                // 只有当两个手指都在移动时才进行平移
+                if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
+                {
+                    Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed*1.3f, panDelta.y * currentPanSpeed * 1.3f, 0);
+                    transform.Translate(panMovement, Space.World);
+                    initialTouchCenter = currentTouchCenter; // 更新中心位置
+
                 }
 
                 // 计算当前的角度
@@ -113,7 +125,7 @@ public class RotateObjectInput : MonoBehaviour
                 initialAngle = currentAngle;
             }
         }
-        else if (!Application.isMobilePlatform)
+        else
         {
             // 这里是PC端的鼠标操作
             if (Input.GetMouseButton(0))
@@ -134,6 +146,7 @@ public class RotateObjectInput : MonoBehaviour
                 transform.Translate(panMovement, Space.World);
             }
 
+            // 鼠标滚轮用于缩放
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             if (Mathf.Abs(scroll) > 0.01f)
             {
@@ -147,6 +160,7 @@ public class RotateObjectInput : MonoBehaviour
                 // 应用新的缩放
                 transform.localScale = newScale;
             }
+
         }
 
         // 更新上一次鼠标位置
