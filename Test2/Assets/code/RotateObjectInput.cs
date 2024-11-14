@@ -1,6 +1,3 @@
-
-
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -64,7 +61,8 @@ public class RotateObjectInput : MonoBehaviour
                 Touch touch1 = Input.GetTouch(1);
 
                 // 记录双指触摸的初始距离、初始缩放、初始中心位置和初始角度
-                if (touch0.phase == TouchPhase.Began || touch1.phase == TouchPhase.Began)
+                if (touch0.phase == TouchPhase.Began || touch0.phase == TouchPhase.Moved ||
+                    touch1.phase == TouchPhase.Began || touch1.phase == TouchPhase.Moved)
                 {
                     initialTouchDistance = Vector2.Distance(touch0.position, touch1.position);
                     initialObjectScale = transform.localScale;
@@ -76,7 +74,7 @@ public class RotateObjectInput : MonoBehaviour
                 float currentTouchDistance = Vector2.Distance(touch0.position, touch1.position);
 
                 // 只有当双指距离发生变化时才执行缩放
-                if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
+                if (Mathf.Abs(currentTouchDistance - initialTouchDistance) > 1.0f)
                 {
                     // 计算距离的变化比例，放大或缩小
                     float scaleMultiplier = currentTouchDistance / initialTouchDistance;
@@ -88,27 +86,20 @@ public class RotateObjectInput : MonoBehaviour
                     transform.localScale = newScale;
                 }
 
-                // 计算当前双指的中心位置和相对的平移距离
-                Vector2 currentTouchCenter = (touch0.position + touch1.position) / 2;
-                Vector2 panDelta = currentTouchCenter - initialTouchCenter;
-
-
-
-                // 只有当两个手指都在移动时才进行平移
+                // 使用 deltaPosition 计算平移
                 if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
                 {
-                    Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed*1.3f, panDelta.y * currentPanSpeed * 1.3f, 0);
+                    Vector2 panDelta = (touch0.deltaPosition + touch1.deltaPosition) / 2;
+                    Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed * 0.01f, panDelta.y * currentPanSpeed * 0.01f, 0);
                     transform.Translate(panMovement, Space.World);
-                    initialTouchCenter = currentTouchCenter; // 更新中心位置
-
                 }
 
                 // 计算当前的角度
                 float currentAngle = Mathf.Atan2(touch1.position.y - touch0.position.y, touch1.position.x - touch0.position.x) * Mathf.Rad2Deg;
                 float angleDelta = currentAngle - initialAngle;
 
-                // 应用旋转
-                transform.Rotate(Vector3.forward, angleDelta, Space.World);
+                // 应用旋转（限制旋转幅度以避免物体消失）
+                transform.Rotate(Vector3.forward, angleDelta * 0.1f, Space.World);
 
                 // 更新初始角度
                 initialAngle = currentAngle;
@@ -135,11 +126,11 @@ public class RotateObjectInput : MonoBehaviour
                 transform.Translate(panMovement, Space.World);
             }
 
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
-            if (Mathf.Abs(scroll) > 0.01f)
+            float scrollValue = Input.GetAxis("Mouse ScrollWheel");
+            if (Mathf.Abs(scrollValue) > 0.01f)
             {
                 // 计算新的缩放比例
-                Vector3 newScale = transform.localScale + Vector3.one * scroll * scaleSpeedPC * 50;
+                Vector3 newScale = transform.localScale + Vector3.one * scrollValue * scaleSpeedPC * 50;
 
                 // 应用缩放限制
                 newScale = Vector3.Max(newScale, Vector3.one * minScale);
