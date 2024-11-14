@@ -32,7 +32,9 @@ public class AnimationSliderControl : MonoBehaviour
     {
         if (isDragging)
         {
-            animator.Play(animator.GetCurrentAnimatorStateInfo(0).shortNameHash, 0, value);
+            // 限制滑动条的值在 0 到 0.9999f 之间，避免动画回到第一帧
+            float adjustedValue = Mathf.Clamp(value, 0, 0.99f);
+            animator.Play(animator.GetCurrentAnimatorStateInfo(0).shortNameHash, 0, adjustedValue);
             animator.speed = 0;
         }
     }
@@ -49,7 +51,7 @@ public class AnimationSliderControl : MonoBehaviour
         isDraggingSlider = false; // 释放静态变量
         if (animationControl != null && !animationControl.IsPaused)
         {
-            animator.speed = 1;
+            animator.speed = 1; // 恢复动画播放
         }
     }
 }
