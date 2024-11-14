@@ -2107,7 +2107,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Version \n6"
+  m_text: 7
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2503,6 +2503,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8471824859870277401, guid: 138080c37b526474b882267697baa0f4, type: 3}
+      propertyPath: debugText
+      value: 
+      objectReference: {fileID: 799323536}
     - target: {fileID: 8471824859870277401, guid: 138080c37b526474b882267697baa0f4, type: 3}
       propertyPath: m_Enabled
       value: 1

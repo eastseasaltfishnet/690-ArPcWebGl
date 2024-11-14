@@ -1,7 +1,7 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class RotateObjectInput : MonoBehaviour
 {
@@ -14,6 +14,8 @@ public class RotateObjectInput : MonoBehaviour
     // 移动端的缩放和平移速度
     public float scaleSpeedMobile = 0.003f;  // 较低的缩放速度
     public float panSpeedMobile = 0.002f;    // 更低的平移速度
+
+    public TextMeshProUGUI debugText; // 引用 TextMeshPro 组件作为调试输出
 
     private Vector3 lastMousePosition;      // 记录上一次鼠标位置
     private float initialTouchDistance;     // 初始双指距离
@@ -34,6 +36,7 @@ public class RotateObjectInput : MonoBehaviour
         // 如果正在拖动进度条，直接返回，不执行旋转代码
         if (AnimationSliderControl.isDraggingSlider)
         {
+            UpdateDebugText("Dragging slider, rotation disabled.");
             return;
         }
 
@@ -50,9 +53,18 @@ public class RotateObjectInput : MonoBehaviour
                     float rotationY = touch.deltaPosition.y * rotationSpeed;
 
 
+                    
+                    if (Application.isMobilePlatform)
+                    {
+
+                        rotationX = -rotationX; // 反转平移的方向
+                    }
+
                     // 应用旋转（世界坐标系）
                     transform.Rotate(Vector3.up, -rotationX, Space.World);
                     transform.Rotate(Vector3.right, -rotationY, Space.World);
+
+                    UpdateDebugText($"is mobileRotating: X={rotationX}, Y={rotationY}");
                 }
             }
             // 双指触摸用于缩放、平移和旋转
@@ -84,6 +96,8 @@ public class RotateObjectInput : MonoBehaviour
                     newScale = Vector3.Max(newScale, Vector3.one * minScale); // 限制最小缩放
                     newScale = Vector3.Min(newScale, Vector3.one * maxScale); // 限制最大缩放
                     transform.localScale = newScale;
+
+                    UpdateDebugText($"Scaling: Multiplier={scaleMultiplier}");
                 }
 
                 // 计算当前双指的中心位置和相对的平移距离
@@ -102,6 +116,8 @@ public class RotateObjectInput : MonoBehaviour
                     Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed, panDelta.y * currentPanSpeed, 0);
                     transform.Translate(panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 更新中心位置
+
+                    UpdateDebugText($"Panning: DeltaX={panDelta.x}, DeltaY={panDelta.y}");
                 }
 
                 // 计算当前的角度
@@ -110,6 +126,8 @@ public class RotateObjectInput : MonoBehaviour
 
                 // 应用旋转
                 transform.Rotate(Vector3.forward, angleDelta, Space.World);
+
+                UpdateDebugText($"Rotating around Z: AngleDelta={angleDelta}");
 
                 // 更新初始角度
                 initialAngle = currentAngle;
@@ -126,6 +144,8 @@ public class RotateObjectInput : MonoBehaviour
 
                 transform.Rotate(Vector3.up, -rotationX, Space.World);
                 transform.Rotate(Vector3.right, rotationY, Space.World);
+
+                UpdateDebugText($"PC Rotating: X={rotationX}, Y={rotationY}");
             }
 
             if (Input.GetMouseButton(2))
@@ -134,6 +154,8 @@ public class RotateObjectInput : MonoBehaviour
                 Vector3 panMovement = new Vector3(delta.x * panSpeedPC, delta.y * panSpeedPC, 0);
 
                 transform.Translate(panMovement, Space.World);
+
+                UpdateDebugText($"PC Panning: X={panMovement.x}, Y={panMovement.y}");
             }
 
             // 鼠标滚轮用于缩放
@@ -149,11 +171,21 @@ public class RotateObjectInput : MonoBehaviour
 
                 // 应用新的缩放
                 transform.localScale = newScale;
-            }
 
+                UpdateDebugText($"PC Scaling: ScrollAmount={scroll}");
+            }
         }
 
         // 更新上一次鼠标位置
         lastMousePosition = Input.mousePosition;
+    }
+
+    // 更新调试文本的内容
+    void UpdateDebugText(string message)
+    {
+        if (debugText != null)
+        {
+            debugText.text = message;
+        }
     }
 }
