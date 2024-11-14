@@ -2402,9 +2402,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 270947488}
-        m_TargetAssemblyTypeName: Zappar.ZapparInstantTrackingTarget, Zappar.UAR
-        m_MethodName: ResetTrackerAnchor
+      - m_Target: {fileID: 6948337970464084614}
+        m_TargetAssemblyTypeName: Reset, Assembly-CSharp
+        m_MethodName: ResetTransform
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2599,5 +2599,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cda7ddf037670054da2770da21526e19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6948337970464084614 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8471824859870277400, guid: 138080c37b526474b882267697baa0f4, type: 3}
+  m_PrefabInstance: {fileID: 2213330025381013284}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b031350101b1c47a5a92932284c035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
