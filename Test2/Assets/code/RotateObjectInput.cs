@@ -57,7 +57,7 @@ public class RotateObjectInput : MonoBehaviour
 
                     // 应用旋转（世界坐标系）
                     transform.Rotate(Vector3.up, rotationX, Space.World);
-                    transform.Rotate(Vector3.right, rotationY, Space.World);
+                    transform.Rotate(Vector3.right, -rotationY, Space.World);
                 }
             }
             // 双指触摸用于缩放、平移和旋转
