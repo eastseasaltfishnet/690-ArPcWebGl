@@ -12,7 +12,7 @@ public class RotateObjectInput : MonoBehaviour
 
     // 移动端的缩放和平移速度
     public float scaleSpeedMobile = 0.003f;  // 较低的缩放速度
-    public float panSpeedMobile = 0.01f;     // 更低的平移速度
+    public float panSpeedMobile = 0.005f;    // 降低的平移速度
 
     private Vector3 lastMousePosition;       // 记录上一次鼠标位置
     private float initialTouchDistance;      // 初始双指距离
@@ -23,6 +23,9 @@ public class RotateObjectInput : MonoBehaviour
     // 限制缩放范围
     public float minScale = 0.5f;            // 最小缩放比例
     public float maxScale = 2.0f;            // 最大缩放比例
+
+    // 平移的最大幅度限制
+    private float maxPanMagnitudeMobile = 50f;  // 限制平移距离，以防移动端偏移过大
 
     void Update()
     {
@@ -37,7 +40,7 @@ public class RotateObjectInput : MonoBehaviour
         }
 
         // 检查触摸输入（适用于移动设备）
-        if (Input.touchCount > 0)
+        if (Application.isMobilePlatform && Input.touchCount > 0)
         {
             // 单指触摸用于旋转
             if (Input.touchCount == 1)
@@ -88,14 +91,13 @@ public class RotateObjectInput : MonoBehaviour
                 Vector2 currentTouchCenter = (touch0.position + touch1.position) / 2;
                 Vector2 panDelta = currentTouchCenter - initialTouchCenter;
 
-                // 动态调整移动端平移速度，适配不同的 DPI
-                float screenScaleFactor = 160f / Screen.dpi; // 基于屏幕 DPI 的比例调整
-                float adjustedPanSpeedMobile = panSpeedMobile * screenScaleFactor;
+                // 限制移动端平移的幅度
+                panDelta = Vector2.ClampMagnitude(panDelta, maxPanMagnitudeMobile);
 
                 // 只有当两个手指都在移动时才进行平移
                 if (touch0.phase == TouchPhase.Moved && touch1.phase == TouchPhase.Moved)
                 {
-                    Vector3 panMovement = new Vector3(panDelta.x * adjustedPanSpeedMobile * 1.3f, panDelta.y * adjustedPanSpeedMobile * 1.3f, 0);
+                    Vector3 panMovement = new Vector3(panDelta.x * currentPanSpeed, panDelta.y * currentPanSpeed, 0);
                     transform.Translate(panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 更新中心位置
                 }
@@ -111,7 +113,7 @@ public class RotateObjectInput : MonoBehaviour
                 initialAngle = currentAngle;
             }
         }
-        else
+        else if (!Application.isMobilePlatform)
         {
             // 这里是PC端的鼠标操作
             if (Input.GetMouseButton(0))
