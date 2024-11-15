@@ -61,7 +61,7 @@ public class RotateObjectInput : MonoBehaviour
                     }
 
                     // 应用旋转（世界坐标系）
-                    transform.Rotate(Vector3.up, -rotationX, Space.World);
+                    transform.Rotate(Vector3.up, rotationX, Space.World);
                     transform.Rotate(Vector3.right, -rotationY, Space.World);
 
                     UpdateDebugText($"is mobileRotating: X={rotationX}, Y={rotationY}");
@@ -97,7 +97,7 @@ public class RotateObjectInput : MonoBehaviour
                     newScale = Vector3.Min(newScale, Vector3.one * maxScale); // 限制最大缩放
                     transform.localScale = newScale;
 
-                    UpdateDebugText($"Scaling: Multiplier={scaleMultiplier}");
+                    UpdateDebugText($"Scaling: Mobile Multiplier={scaleMultiplier}");
                 }
 
                 // 计算当前双指的中心位置和相对的平移距离
@@ -117,7 +117,7 @@ public class RotateObjectInput : MonoBehaviour
                     transform.Translate(panMovement, Space.World);
                     initialTouchCenter = currentTouchCenter; // 更新中心位置
 
-                    UpdateDebugText($"Panning: DeltaX={panDelta.x}, DeltaY={panDelta.y}");
+                    //UpdateDebugText($"Panning: DeltaX={panDelta.x}, DeltaY={panDelta.y}");
                 }
 
                 // 计算当前的角度
@@ -127,7 +127,7 @@ public class RotateObjectInput : MonoBehaviour
                 // 应用旋转
                 transform.Rotate(Vector3.forward, angleDelta, Space.World);
 
-                UpdateDebugText($"Rotating around Z: AngleDelta={angleDelta}");
+                //UpdateDebugText($"Rotating around Z: AngleDelta={angleDelta}");
 
                 // 更新初始角度
                 initialAngle = currentAngle;
