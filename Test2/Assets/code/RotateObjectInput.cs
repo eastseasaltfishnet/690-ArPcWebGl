@@ -55,7 +55,7 @@ public class RotateObjectInput : MonoBehaviour
                     if (Application.isMobilePlatform)
                     {
                         rotationX = -rotationX; // 反转平移的左右方向
-                        rotationY = -rotationY;
+                        rotationY = rotationY;
                     }
 
                     // 应用旋转（世界坐标系）
