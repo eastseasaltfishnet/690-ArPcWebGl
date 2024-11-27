@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 
 public class SwitchAnimation : MonoBehaviour
@@ -12,6 +13,7 @@ public class SwitchAnimation : MonoBehaviour
     private GameObject currentPrefab;
     public Transform trackingTarget;
     public Button placeButton;
+    public TMP_Dropdown animationDropdown;
 
     void Start()
     {
@@ -26,6 +28,16 @@ public class SwitchAnimation : MonoBehaviour
         else
         {
             Debug.LogError("PlaceButton is not assigned.");
+        }
+
+        // Add listener to animationDropdown
+        if (animationDropdown != null)
+        {
+            animationDropdown.onValueChanged.AddListener(delegate { OnDropdownValueChanged(); });
+        }
+        else
+        {
+            Debug.LogError("AnimationDropdown is not assigned.");
         }
     }
 
@@ -42,14 +54,38 @@ public class SwitchAnimation : MonoBehaviour
             Destroy(currentPrefab);
         }
 
-        // Instantiate the appropriate prefab as a child of the tracking target
-        if (currentPrefab == prefab1 || currentPrefab == null)
+        // Instantiate the selected prefab as a child of the tracking target
+        if (animationDropdown != null)
         {
-            currentPrefab = Instantiate(prefab2, trackingTarget);
+            switch (animationDropdown.value)
+            {
+                case 0:
+                    currentPrefab = Instantiate(prefab1, trackingTarget);
+                    break;
+                case 1:
+                    currentPrefab = Instantiate(prefab2, trackingTarget);
+                    break;
+                default:
+                    Debug.LogError("Invalid dropdown value.");
+                    break;
+            }
         }
-        else
+    }
+
+    void UpdatePrefabSelection()
+    {
+        // Update prefab selection based on dropdown value
+        Debug.Log("Prefab selection updated to: " + animationDropdown.options[animationDropdown.value].text);
+    }
+
+    void OnDropdownValueChanged()
+    {
+        // Destroy the current prefab when dropdown value changes
+        if (currentPrefab != null)
         {
-            currentPrefab = Instantiate(prefab1, trackingTarget);
+            Destroy(currentPrefab);
         }
+
+        UpdatePrefabSelection();
     }
 }
