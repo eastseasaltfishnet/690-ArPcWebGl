@@ -164,6 +164,17 @@ public class AnimationSliderControl : MonoBehaviour
             animator.speed = 0;     // 暂停动画
             animationSlider.value = 0; // 重置滑块
         }
+
+        // 重置物体的位置、旋转和缩放
+        Reset resetScript = animator.GetComponent<Reset>();
+        if (resetScript != null)
+        {
+            resetScript.ResetTransform();
+        }
+        else
+        {
+            Debug.LogWarning("未找到 Reset 脚本，请确保该对象附加了 Reset 脚本。");
+        }
     }
 
     // Place 按钮点击事件
