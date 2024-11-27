@@ -14,6 +14,7 @@ public class SwitchAnimation : MonoBehaviour
     public Transform trackingTarget;
     public Button placeButton;
     public TMP_Dropdown animationDropdown;
+    public TextMeshProUGUI contentBoxText;
 
     void Start()
     {
@@ -61,9 +62,11 @@ public class SwitchAnimation : MonoBehaviour
             {
                 case 0:
                     currentPrefab = Instantiate(prefab1, trackingTarget);
+                    UpdateContentBoxText("Insert the GPU onto the first slot (with red grid) on the mother board");
                     break;
                 case 1:
                     currentPrefab = Instantiate(prefab2, trackingTarget);
+                    UpdateContentBoxText("press the clip to unclock the insert the RAM onto the first and third slot! After you hear the 'click!' sound from the clip you are good to go");
                     break;
                 default:
                     Debug.LogError("Invalid dropdown value.");
@@ -87,5 +90,17 @@ public class SwitchAnimation : MonoBehaviour
         }
 
         UpdatePrefabSelection();
+    }
+
+    void UpdateContentBoxText(string newText)
+    {
+        if (contentBoxText != null)
+        {
+            contentBoxText.text = newText;
+        }
+        else
+        {
+            Debug.LogError("ContentBoxText is not assigned.");
+        }
     }
 }
