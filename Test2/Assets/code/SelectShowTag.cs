@@ -13,6 +13,17 @@ public class SelectShowTag : MonoBehaviour
 
     void Start()
     {
+        // 查找场景中的 Canvas
+        if (canvas == null)
+        {
+            canvas = FindObjectOfType<Canvas>();
+            if (canvas == null)
+            {
+                Debug.LogError("没有找到 Canvas，请确保场景中存在一个 Canvas。");
+                return;
+            }
+        }
+
         outline = GetComponent<Outline>();
         if (outline != null)
         {
@@ -77,7 +88,6 @@ public class SelectShowTag : MonoBehaviour
             screenPosition.y = Mathf.Clamp(screenPosition.y, 0, Screen.height - 50);  // 50是背景高度
 
             background.transform.position = screenPosition;
-            Debug.Log("Adjusted Screen Position: " + screenPosition); // 输出调整后的屏幕坐标
         }
     }
 

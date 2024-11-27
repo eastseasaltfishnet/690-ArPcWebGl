@@ -111,7 +111,7 @@ public class RotateObjectInput : MonoBehaviour
                 // 更新初始角度
                 initialAngle = currentAngle;
             }
-            else if (Input.touchCount == 0)
+            else if (Input.touchCount == 1)
             {
                 // 在双指操作松手时重置初始角度，防止松手后旋转跳跃
                 initialAngle = 0;
